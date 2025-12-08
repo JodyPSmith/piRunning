@@ -1,4 +1,7 @@
 localtests
+assets
+# Remove once svelteFrontend is decided on as the frontend
+svelteFrontend
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

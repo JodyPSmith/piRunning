@@ -1,21 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>PiRunning</title>
 </head>
+
 <body>
-    <div class="welcome">
-        <h1>Welcome to PiRunning Server</h1>
-        <p>Your server is up and running!</p>
+    <div class="interface">
+        <div class="inclineButtons">
+            <button class="inclineSet" onclick="inclineSet(10)">10</button>
+            <button class="inclineSet" onclick="inclineSet(9)">9</button>
+            <button class="inclineSet" onclick="inclineSet(8)">8</button>
+            <button class="inclineSet" onclick="inclineSet(7)">7</button>
+            <button class="inclineSet" onclick="inclineSet(6)">6</button>
+            <button class="inclineSet" onclick="inclineSet(5)">5</button>
+            <button class="inclineSet" onclick="inclineSet(4)">4</button>
+            <button class="inclineSet" onclick="inclineSet(3)">3</button>
+            <button class="inclineSet" onclick="inclineSet(2)">2</button>
+            <button class="inclineSet" onclick="inclineSet(1)">1</button>
+            <button class="inclineSet" onclick="inclineSet(0)">0</button>
+        </div>
+        <div class="center">
+           
+            <div class="stats">
+                <div id="distance">
+                    0.0km
+                </div>
+                <div id="heartrate">
+                    60bpm
+                </div>
+                <div id="calories">
+                    000kcal
+                </div>
+                <div id="duration">
+                    00:00:00
+                </div>
+            </div>
+            <div class="startstop">
+                    <button id="startButton" onclick="startRun()">Start</button>
+                    <button id="stopButton" onclick="stopRun()">Stop</button>
+                </div>
+            <div class="controls">
+                
+                <div class="inclineContainer">
+                    <button id="inclineUp" onclick="inclineSet('increase')">Incline Up</button>
+                    <div id="incline">0</div>
+                    <button id="inclineDown" onclick="inclineSet('decrease')">Incline Down</button>
+                </div>
+
+                <div class="speedContainer">
+                    <button id="speedUp" onclick="speedSet('increase')">Speed Up</button>
+                    <div id="speed">0</div>
+                    <button id="speedDown" onclick="speedSet('decrease')">Speed Down</button>
+                </div>
+            </div>
+            <div class="metronome">             
+                <button id="metronomeDown" onclick="metronomeSet('decrease')">Decrease</button>
+                <div id="metronome">160</div>
+                <button id="metronomeUp" onclick="metronomeSet('increase')">Increase</button>
+                <button id="metronomeToggle" onclick="metronomeToggle()">Metronome On/Off</button>              
+            </div>                
+        </div>
+        <div class="speedButtons">
+            <button class="speedSet" onclick="speedSet(10)">10</button>
+            <button class="speedSet" onclick="speedSet(9)">9</button>
+            <button class="speedSet" onclick="speedSet(8)">8</button>
+            <button class="speedSet" onclick="speedSet(7)">7</button>
+            <button class="speedSet" onclick="speedSet(6)">6</button>
+            <button class="speedSet" onclick="speedSet(5)">5</button>
+            <button class="speedSet" onclick="speedSet(4)">4</button>
+            <button class="speedSet" onclick="speedSet(3)">3</button>
+            <button class="speedSet" onclick="speedSet(2)">2</button>
+            <button class="speedSet" onclick="speedSet(1)">1</button>
+            <button class="speedSet" onclick="speedSet(0)">0</button>
+        </div>
     </div>
-    <button id="LEDOn" onclick="LEDOn(36)">Turn LED On</button>
-    <button id="LEDOff" onclick="LEDOff(36)">Turn LED Off</button>
-    <button id="speedUp" onclick="speedUp()">Speed Up</button>
-    <button id="speedDown" onclick="speedDown()">Speed Down</button>
-    
+    <script src="config.js"></script>
     <script src="script.js"></script>
+    <script src="metronome.js"></script>
+
+</html>
 </body>
+
 </html>

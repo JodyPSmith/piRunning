@@ -1,13 +1,125 @@
+@font-face {
+    font-family: Roboto-light;
+    src: url('./font/Roboto-Light.ttf') format('truetype');
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: Roboto-light, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #272626;
+    background-image: url("./background1080p.jpg");
+     background-size: cover;
 }
 
-.welcome{
-    text-align: center;
-    padding: 50px;
-    color: #ffffff;
+.interface {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
 }
 
+.center{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(39, 38, 38, 0.7);
+}
+
+button {
+    margin: 1vh 1vw;
+    padding: 1vh 1vw;
+    width: 15vw;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    font-size: 2vh;
+    background-color: rgb(72, 122, 216);
+}
+
+.stats {
+    display: flex;
+    margin: auto;
+    color: white;
+    align-items: center;
+    justify-content: space-around;
+    width: 60vw;
+}
+
+#distance{
+    margin: 2vw;
+}
+
+#heartrate{
+    margin: 2vw;
+}
+
+.startstop{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#startButton {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#stopButton {
+    background-color: #f44336;
+    color: white;
+}
+
+#distance, #duration, #heartrate, #calories {
+    font-size: 3vh;
+    color: white;
+}
+.controls {
+    display: flex;
+    width: 70vw;
+    height: 40vh;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.inclineContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#incline {
+    font-size: 8vh;
+    color: white;
+}
+
+#speed {
+    font-size: 8vh;
+    color: white;
+}
+
+.speedContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inclineButtons, .speedButtons {
+    display: flex;
+    width: 8vw;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+.metronome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
