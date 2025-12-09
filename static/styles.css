@@ -9,7 +9,8 @@ body {
     padding: 0;
     background-color: #272626;
     background-image: url("./background1080p.jpg");
-     background-size: cover;
+    background-size: cover;
+    background-position: center;
 }
 
 .interface {
@@ -122,4 +123,11 @@ button {
     align-items: center;
     justify-content: center;
     color: white;
+}
+
+#metronome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 5vw;
 }

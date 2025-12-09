@@ -67,3 +67,19 @@ const formatSecondsToHHMMSS = (totalSeconds) => {
 
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
+
+const convertSpeedOrDistance = (distanceKm) => {
+  if (config.unitsDistance === "metric") {
+    return distanceKm;
+  } else {
+    return distanceKm * 0.621371; // Convert km to miles
+  }
+}
+
+const convertWeight = (weightKg) => {
+  if (config.unitsWeight === "metric") {
+    return weightKg;
+  } else {
+    return weightKg * 2.20462; // Convert kg to pounds
+  }
+}
