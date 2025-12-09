@@ -1,6 +1,7 @@
 from gpiozero import PWMLED
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
+
 # from fastapi.responses import HTMLResponse
 import json
 import csv
@@ -10,6 +11,7 @@ from time import sleep
 import config
 from components.calorieCalculator import calculate_calories_burned
 
+pwm = PWMLED(12)  # GPIO pin 12 for PWM control
 app = FastAPI()
 
 
@@ -21,67 +23,9 @@ data_log = {
     "heart_rate": 120,
     "calories": 0,
     "duration_seconds": 678,
-    "start_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    "start_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
 }
 
-start_time = ""
-
-
-# websocket to listen to frontend and send updated data_log dictionary
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    
-    while True:
-        data = await websocket.receive_text()
-        print(data)
-        calories = calculate_calories_burned(config.config["gender"], config.config["age"], config.config["weight_lbs"], data_log["heart_rate"], data_log["duration_seconds"] / 60)
-        data_log["calories"] = calories
-        print(f"Calculated calories: {calories:.2f}")
-        if data == "start":
-            start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            data_log["start_time"] = start_time
-            # zero out distance and calories
-            data_log["distance"] = 0.0
-            data_log["calories"] = 0.0
-        elif data == "stop":
-            print("Workout stopped")
-            # log data to csv file
-            with open('workout_log.csv', mode='a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([data_log["start_time"], time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), data_log["distance"], data_log["calories"]])
-        else:
-            data_json = json.loads(data)
-            if data_json["type"] == "speedSet":
-                if data_json["value"] == "increase":
-                    data_log["speed"] += 0.1
-                elif data_json["value"] == "decrease":
-                    data_log["speed"] -= 0.1
-            elif data_json["type"] == "inclineSet":
-                if data_json["value"] == "increase":
-                    data_log["incline"] += 0.1
-                elif data_json["value"] == "decrease":
-                    data_log["incline"] -= 0.1
-        
-
-        await websocket.send_text(json.dumps(data_log))
-
-
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
-# app.mount("/", StaticFiles(directory="svelteFrontend/build", html=True), name="static")
-
-
-
-# from signal import pause
-
-# gpio16 = LED(16)
-# gpio13 = LED(13)
-pwm = PWMLED(12)
-# while True:
-#   red.on()
-#  sleep(1)
-# red.off()
-# sleep(1)
 
 def speed_step(start, finish):
     # determine the difference between the start and finish speeds and reduce the difference by 0.1 each 500ms until finish speed is reached
@@ -94,6 +38,87 @@ def speed_step(start, finish):
         speed += step
     return
 
+
+start_time = ""
+
+
+@app.get("/speed")
+async def speed(value: float = 0.5):
+    start = pwm.value
+    finish = value
+    print(f"here is value {pwm.value}")
+    speed_step(start, finish)
+    return {"message": "pulsing pin 36, GPIO 16"}
+
+
+# websocket to listen to frontend and send updated data_log dictionary
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+
+    while True:
+        data = await websocket.receive_text()
+        print(data)
+        calories = calculate_calories_burned(
+            config.config["gender"],
+            config.config["age"],
+            config.config["weight_lbs"],
+            data_log["heart_rate"],
+            data_log["duration_seconds"] / 60,
+        )
+        data_log["calories"] = calories
+        print(f"Calculated calories: {calories:.2f}")
+        if data == "start":
+            start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            data_log["start_time"] = start_time
+            # zero out distance and calories
+            data_log["distance"] = 0.0
+            data_log["calories"] = 0.0
+        elif data == "stop":
+            print("Workout stopped")
+            # log data to csv file
+            with open("workout_log.csv", mode="a", newline="") as file:
+                writer = csv.writer(file)
+                writer.writerow(
+                    [
+                        data_log["start_time"],
+                        time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                        data_log["distance"],
+                        data_log["calories"],
+                    ]
+                )
+        else:
+            data_json = json.loads(data)
+            if data_json["type"] == "speedSet":
+                if data_json["value"] == "increase":
+                    data_log["speed"] += 0.1
+                elif data_json["value"] == "decrease":
+                    data_log["speed"] -= 0.1
+            elif data_json["type"] == "inclineSet":
+                if data_json["value"] == "increase":
+                    data_log["incline"] += 0.1
+                elif data_json["value"] == "decrease":
+                    data_log["incline"] -= 0.1
+
+        await websocket.send_text(json.dumps(data_log))
+
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# app.mount("/", StaticFiles(directory="svelteFrontend/build", html=True), name="static")
+
+
+# from signal import pause
+
+# gpio16 = LED(16)
+# gpio13 = LED(13)
+
+# while True:
+#   red.on()
+#  sleep(1)
+# red.off()
+# sleep(1)
+
+
 # @app.get("/on")
 # async def on():
 #     # gpio16.on()
@@ -105,14 +130,6 @@ def speed_step(start, finish):
 #     # gpio16.off()
 #     return {"message": "turning off pin 36, GPIO 16"}
 
-
-@app.get("/speed")
-async def speed(value: float = 0.5):
-    start = pwm.value
-    finish = value
-    print(f"here is value {pwm.value}")
-    speed_step(start, finish)
-    return {"message" : "pulsing pin 36, GPIO 16"}
 
 # @app.get("/speedUp")
 # async def speedup(value: float = 0.05):
