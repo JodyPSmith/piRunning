@@ -18,7 +18,7 @@ Work in progress - Raspberry Pi based python server to control Nordic track T 6.
  - python install pip
  - python -m pip install --upgrade pip
  - source .venv/bin/activate (source ./.vanv/Scripts/activate on windows )
- - pip install "fastapi[standard]" gpiozero websockets bleak
+ - pip install "fastapi[standard]" gpiozero websockets bleak RPi.GPIO
  - source .venv/bin/activate
  - fastapi run --port 80 server.py
 

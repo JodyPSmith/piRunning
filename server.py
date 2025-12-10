@@ -11,7 +11,7 @@ from time import sleep
 import config
 from components.calorieCalculator import calculate_calories_burned
 
-pwm = PWMLED(12)  # GPIO pin 12 for PWM control
+pwm = PWMLED(12, frequency=20)  # GPIO pin 12 for PWM control
 app = FastAPI()
 
 
@@ -49,6 +49,22 @@ async def speed(value: float = 0.5):
     print(f"here is value {pwm.value}")
     speed_step(start, finish)
     return {"message": "pulsing pin 36, GPIO 16"}
+
+@app.get("/speed0")
+async def speed(value: float = 0.5):
+    pwm.value = 0
+    return {"message": "pulsing pin 36, GPIO 16"}
+
+@app.get("/speed4")
+async def speed(value: float = 0.5):
+    pwm.value = 0.4
+    return {"message": "pulsing pin 36, GPIO 16"}
+
+@app.get("/speed10")
+async def speed(value: float = 0.5):
+    pwm.value = 1
+    return {"message": "pulsing pin 36, GPIO 16"}
+
 
 
 # websocket to listen to frontend and send updated data_log dictionary
