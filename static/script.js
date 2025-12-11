@@ -18,20 +18,29 @@ const speedSet = async (value) => {
   }))
 }
 
+let intervalId;
 const startRun = async () => {
   console.log("Start Run pressed");
-  ws.send(JSON.stringify({
-    type: "start",
-    value: 1
-  }))
+  if (!intervalId) { // Prevent multiple intervals from starting
+    intervalId = setInterval(syncData, 1000); // Start the function every second
+    ws.send(JSON.stringify({
+      type: "start",
+      value: 1
+    }))
+  }
+
 }
 
 const stopRun = async () => {
   console.log("Stop Run pressed");
-  ws.send(JSON.stringify({
-    type: "stop",
-    value: 1
-  }))
+  if (intervalId) {
+    clearInterval(intervalId); // Stop the interval
+    intervalId = null; // Reset the ID
+    ws.send(JSON.stringify({
+      type: "stop",
+      value: 1
+    }))
+  }
 }
 
 // this is what it does when it gets a message
@@ -45,14 +54,21 @@ ws.onmessage = function (event) {
   let duration = document.getElementById("duration")
   let incline = document.getElementById("incline")
   let speed = document.getElementById("speed")
-  
+
   distance.innerHTML = data.distance.toFixed(2) + ` ${config.unitsDistance}/h`
   heartrate.innerHTML = data.heart_rate.toFixed(0) + ` bpm`
   calories.innerHTML = data.calories.toFixed(0) + ` kcal`
   duration.innerHTML = formatSecondsToHHMMSS(data.duration_seconds)
-  speed.innerHTML = data.speed.toFixed(1) 
+  speed.innerHTML = convertSpeedOrDistance((data.speed * 10)).toFixed(2)
   incline.innerHTML = data.incline.toFixed(1)
 };
+
+const syncData = async () => {
+  ws.send(JSON.stringify({
+    type: "sync",
+    value: 1
+  }))
+}
 
 const formatSecondsToHHMMSS = (totalSeconds) => {
   const hours = Math.floor(totalSeconds / 3600);
@@ -68,11 +84,13 @@ const formatSecondsToHHMMSS = (totalSeconds) => {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
-const convertSpeedOrDistance = (distanceKm) => {
-  if (config.unitsDistance === "metric") {
-    return distanceKm;
+// T6.5 Si machine reports in mph
+const convertSpeedOrDistance = (distance) => {
+  if (config.unitsDistance === "km") {
+    console.log("Converting to km");
+    return distance * 1.60934;
   } else {
-    return distanceKm * 0.621371; // Convert km to miles
+    return distance
   }
 }
 

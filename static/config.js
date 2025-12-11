@@ -1,5 +1,5 @@
 const config =  {
-    serverIP : "192.168.2.30",
+    serverIP : "pirunning.local",
     password: "password",
     port: 80,
     unitsDistance: "km",
