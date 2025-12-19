@@ -36,3 +36,6 @@ Work in progress - Raspberry Pi based python server to control Nordic track T 6.
 		})
  - add new file called +layout.js with "export const prerender = true;" one line of code
  - npm run build to build static files
+
+ ## embedded setup
+  - pio run -t uploadfs (to push static files in data folder to file system)

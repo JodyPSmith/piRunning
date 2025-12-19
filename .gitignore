@@ -1,5 +1,7 @@
 localtests
 assets
+# not putting embedded code up
+esp32 
 # Remove once svelteFrontend is decided on as the frontend
 svelteFrontend
 
